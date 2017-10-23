@@ -60,18 +60,18 @@ class SeoScript
      * The function reads a csv file
      * @return array - csv data
      */
-    private function readCsvFile($pathToFile)
+    private function readCsvFile($fileName)
     {
         $csvData = array();
 
-        if (file_exists($pathToFile)) {
-            $handleForFile = fopen($pathToFile, "r");
+        if (file_exists($fileName)) {
+            $handleForFile = fopen($fileName, "r");
             while (($data = fgetcsv($handleForFile)) !== FALSE) {
                 $csvData[] = $data;
             }
             fclose($handleForFile);
         } else {
-            throw new IllegalArgumentException("{$pathToFile} does not exist. Be sure that the file is located in the path");
+            throw new IllegalArgumentException("{$fileName} does not exist. Be sure that the file is located in the path");
         }
 
         return $csvData;
@@ -82,6 +82,9 @@ class SeoScript
      */
     private function getMetaTagTitle($siteContent)
     {
+        if ($siteContent == null) {
+            throw new IllegalArgumentException("The variable site content is null. Check the site.");
+        }
         $domDocument = $this->getDomDocumentBySiteContentAsAString($siteContent);
         $tagTitle = $domDocument->getElementsByTagName('title');
         if ($tagTitle !== null) {
@@ -97,6 +100,9 @@ class SeoScript
      */
     private function getMetaTagDescription($siteContent)
     {
+        if ($siteContent == null) {
+            throw new IllegalArgumentException("The variable site content is null. Check the site.");
+        }
         $metaTags = $this->getMetaTags($siteContent);
         if (isset($metaTags['description'])) {
             return $metaTags['description'];
